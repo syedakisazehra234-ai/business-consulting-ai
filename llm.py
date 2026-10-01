@@ -1,16 +1,5 @@
 import os
 import streamlit as st
-
-# ---------------------------------------------------------
-# FIX FOR CREWAI + GROQ CACHE BREAKPOINT BUG
-# ---------------------------------------------------------
-import crewai.llms.cache as crewai_cache
-
-# CrewAI adds cache_breakpoint=True to messages.
-# Groq does not support this property.
-crewai_cache.mark_cache_breakpoint = lambda message: message
-
-
 from crewai import LLM
 
 
@@ -31,5 +20,5 @@ def get_groq_llm():
         model="groq/openai/gpt-oss-120b",
         api_key=api_key,
         temperature=0.2,
-        max_tokens=6000
+        max_tokens=1500
     )
