@@ -10,9 +10,9 @@ from report_consultant import create_report_consultant
 
 def run_business_consulting(inputs):
 
-    # ---------------------------------------------------------
+    # =========================================================
     # CREATE AGENTS
-    # ---------------------------------------------------------
+    # =========================================================
 
     strategist = create_business_strategist()
 
@@ -27,16 +27,13 @@ def run_business_consulting(inputs):
     report_consultant = create_report_consultant()
 
 
-    # ---------------------------------------------------------
+    # =========================================================
     # TASK 1 — BUSINESS STRATEGY
-    # ---------------------------------------------------------
+    # =========================================================
 
     strategy_task = Task(
-
         description="""
-You are the first consultant in the team.
-
-Analyze the following client information:
+Analyze the client's business situation.
 
 Business:
 {business_name}
@@ -56,7 +53,7 @@ Known competitors:
 Additional information:
 {research}
 
-Your job is to:
+Your responsibilities:
 
 1. Clearly define the business problem.
 2. Identify the primary business objective.
@@ -66,7 +63,11 @@ Your job is to:
 6. Define what the other consulting agents should investigate.
 
 Do not invent facts.
-Clearly distinguish client-provided information from assumptions.
+
+Clearly distinguish:
+- Client-provided information
+- Reasonable assumptions
+- Information that still needs validation
 """,
 
         expected_output="""
@@ -76,7 +77,7 @@ A structured business problem definition containing:
 - Core business problem
 - Business objective
 - Target customer
-- Market
+- Target market
 - Constraints
 - Assumptions
 - Key strategic questions
@@ -87,17 +88,14 @@ A structured business problem definition containing:
     )
 
 
-    # ---------------------------------------------------------
+    # =========================================================
     # TASK 2 — MARKET RESEARCH
-    # ---------------------------------------------------------
+    # =========================================================
 
     market_task = Task(
-
         description="""
-Analyze the market using the client information and the
-Business Strategist's analysis.
-
-Client information:
+Analyze the target market using the client's information
+and the business problem identified by the previous consultant.
 
 Business:
 {business_name}
@@ -108,25 +106,26 @@ Target market:
 Target customer:
 {target_customer}
 
-Additional research:
+Additional information:
 {research}
 
-Previous consultant analysis:
+Your responsibilities:
 
-{strategy_task}
+1. Analyze target customer segments.
+2. Identify customer needs.
+3. Identify demand drivers.
+4. Analyze market trends mentioned in the supplied information.
+5. Identify market opportunities.
+6. Identify market threats.
+7. Identify important unknowns.
+8. Identify assumptions requiring validation.
 
-Analyze:
+Do not pretend that unsupported information is verified
+market data.
 
-1. Target customer segments
-2. Customer needs
-3. Demand drivers
-4. Market trends mentioned in the supplied information
-5. Market opportunities
-6. Market threats
-7. Important unknowns
-8. Assumptions requiring external validation
+Do not invent statistics.
 
-Do not pretend that unsupported information is verified market data.
+Clearly identify information that requires external validation.
 """,
 
         expected_output="""
@@ -148,14 +147,13 @@ A structured market analysis covering:
     )
 
 
-    # ---------------------------------------------------------
+    # =========================================================
     # TASK 3 — COMPETITOR ANALYSIS
-    # ---------------------------------------------------------
+    # =========================================================
 
     competitor_task = Task(
-
         description="""
-Analyze the competitive environment.
+Analyze the competitive environment for the business.
 
 Business:
 {business_name}
@@ -169,23 +167,21 @@ Known competitors:
 Additional information:
 {research}
 
-Use the Business Strategist's analysis below:
+Your responsibilities:
 
-{strategy_task}
+1. Analyze known competitor offerings.
+2. Analyze competitor positioning.
+3. Identify competitor target customers.
+4. Identify competitor strengths.
+5. Identify competitor weaknesses.
+6. Analyze potential differentiation.
+7. Identify possible market gaps.
+8. Identify competitive risks.
 
-Analyze:
+If competitor information is missing,
+explicitly state what cannot be determined.
 
-1. Competitor offerings
-2. Competitor positioning
-3. Target customers
-4. Strengths
-5. Weaknesses
-6. Differentiation
-7. Possible market gaps
-8. Competitive risks
-
-If competitor information is missing, explicitly state what
-cannot be determined instead of inventing facts.
+Do not invent competitor facts.
 """,
 
         expected_output="""
@@ -208,15 +204,14 @@ A structured competitive analysis containing:
     )
 
 
-    # ---------------------------------------------------------
+    # =========================================================
     # TASK 4 — BUSINESS ANALYSIS
-    # ---------------------------------------------------------
+    # =========================================================
 
     business_analysis_task = Task(
-
         description="""
-Perform a structured business analysis using the previous
-consulting findings.
+Perform a structured business analysis using the findings
+from the consulting team.
 
 Business:
 {business_name}
@@ -224,20 +219,14 @@ Business:
 Business problem:
 {business_problem}
 
+Target customer:
+{target_customer}
+
+Target market:
+{target_market}
+
 Additional information:
 {research}
-
-Business strategy analysis:
-
-{strategy_task}
-
-Market analysis:
-
-{market_task}
-
-Competitive analysis:
-
-{competitor_task}
 
 Evaluate:
 
@@ -247,12 +236,17 @@ Evaluate:
 4. Revenue logic
 5. Cost considerations
 6. Operational requirements
-7. SWOT analysis
+7. SWOT factors
 8. Major risks
 9. Dependencies
-10. Important information gaps
+10. Information gaps
 
-Do not fabricate financial numbers or market statistics.
+Do not fabricate financial numbers.
+
+Do not fabricate market statistics.
+
+Base your analysis on the information provided by the client
+and the research findings passed through the previous tasks.
 """,
 
         expected_output="""
@@ -264,7 +258,7 @@ A structured business analysis containing:
 - Revenue logic
 - Cost considerations
 - Operational requirements
-- SWOT
+- SWOT analysis
 - Risks
 - Dependencies
 - Information gaps
@@ -280,16 +274,16 @@ A structured business analysis containing:
     )
 
 
-    # ---------------------------------------------------------
+    # =========================================================
     # TASK 5 — STRATEGY SYNTHESIS
-    # ---------------------------------------------------------
+    # =========================================================
 
     strategy_synthesis_task = Task(
-
         description="""
-Act as the senior strategy consultant.
+Act as the Senior Strategy Consultant.
 
-Synthesize all previous findings.
+Synthesize the complete findings produced by the consulting
+team.
 
 Business:
 {business_name}
@@ -297,52 +291,43 @@ Business:
 Business problem:
 {business_problem}
 
-Business strategy analysis:
+Target market:
+{target_market}
 
-{strategy_task}
-
-Market analysis:
-
-{market_task}
-
-Competitive analysis:
-
-{competitor_task}
-
-Business analysis:
-
-{business_analysis_task}
+Target customer:
+{target_customer}
 
 Develop:
 
-1. Key strategic insights
-2. Strategic options
-3. Advantages and disadvantages of each option
-4. Major trade-offs
-5. Required capabilities
-6. Implementation priorities
-7. Major risks
-8. Risk mitigation ideas
-9. Suggested KPIs
-10. Questions that still require validation
+1. Key strategic insights.
+2. Strategic options.
+3. Advantages and disadvantages of each option.
+4. Major trade-offs.
+5. Required capabilities.
+6. Implementation priorities.
+7. Major risks.
+8. Risk mitigation approaches.
+9. Suggested KPIs.
+10. Questions that still require validation.
 
 Do not present unsupported assumptions as facts.
 
-The goal is not to produce generic business advice.
-The strategy must be directly connected to the supplied
-business situation and previous analysis.
+Do not create generic business advice.
+
+The strategy must be directly connected to the client's
+business situation and the previous consulting analysis.
 """,
 
         expected_output="""
 A strategic synthesis containing:
 
-- Key insights
+- Key strategic insights
 - Strategic options
 - Trade-offs
 - Required capabilities
 - Implementation priorities
 - Risks
-- Mitigation approaches
+- Risk mitigation approaches
 - KPIs
 - Validation questions
 """,
@@ -358,12 +343,11 @@ A strategic synthesis containing:
     )
 
 
-    # ---------------------------------------------------------
+    # =========================================================
     # TASK 6 — FINAL REPORT
-    # ---------------------------------------------------------
+    # =========================================================
 
     report_task = Task(
-
         description="""
 Create the final Business Consulting Strategy Report.
 
@@ -379,24 +363,10 @@ Target market:
 Target customer:
 {target_customer}
 
-Use the complete consulting analysis:
+Create a professional consulting report based on the
+complete analysis produced by the previous consultants.
 
-Business Strategy:
-{strategy_task}
-
-Market Research:
-{market_task}
-
-Competitive Analysis:
-{competitor_task}
-
-Business Analysis:
-{business_analysis_task}
-
-Strategy Synthesis:
-{strategy_synthesis_task}
-
-Create a professional report with the following structure:
+The report must contain:
 
 # Business Consulting Strategy Report
 
@@ -422,10 +392,13 @@ Create a professional report with the following structure:
 
 ## 11. Implementation Roadmap
 
-Create a practical:
-- 0–30 day phase
-- 31–60 day phase
-- 61–90 day phase
+Create three phases:
+
+### 0–30 Days
+
+### 31–60 Days
+
+### 61–90 Days
 
 ## 12. KPIs
 
@@ -439,20 +412,20 @@ Important rules:
 
 - Do not invent statistics.
 - Do not invent competitor facts.
-- Do not claim that research was performed on the internet.
+- Do not claim that internet research was performed.
 - Clearly identify assumptions.
 - Clearly distinguish supplied information from analysis.
 - Avoid generic motivational language.
-- Make the report practical and decision-oriented.
+- Make the report practical and specific to the client's problem.
 """,
 
         expected_output="""
 A polished Markdown business consulting report containing
 all requested sections.
 
-The report must be structured, professional, specific to the
-client's business problem and transparent about assumptions
-and information gaps.
+The report must be professional, structured, specific
+to the client's business problem and transparent about
+assumptions and information gaps.
 """,
 
         agent=report_consultant,
@@ -467,12 +440,11 @@ and information gaps.
     )
 
 
-    # ---------------------------------------------------------
+    # =========================================================
     # CREATE CREW
-    # ---------------------------------------------------------
+    # =========================================================
 
     consulting_crew = Crew(
-
         agents=[
             strategist,
             market_researcher,
@@ -499,9 +471,9 @@ and information gaps.
     )
 
 
-    # ---------------------------------------------------------
+    # =========================================================
     # RUN CREW
-    # ---------------------------------------------------------
+    # =========================================================
 
     result = consulting_crew.kickoff(
         inputs=inputs
