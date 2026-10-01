@@ -4,12 +4,8 @@ from crewai import LLM
 
 
 def get_groq_llm():
-    """
-    Creates the Groq LLM used by every agent.
 
-    The API key is read from Streamlit Secrets.
-    """
-
+    # Get API key from Streamlit Secrets
     try:
         api_key = st.secrets["GROQ_API_KEY"]
     except Exception:
@@ -18,7 +14,7 @@ def get_groq_llm():
     if not api_key:
         raise ValueError(
             "GROQ_API_KEY is missing. "
-            "Add it to Streamlit Secrets."
+            "Please add GROQ_API_KEY to Streamlit Secrets."
         )
 
     return LLM(
@@ -26,4 +22,10 @@ def get_groq_llm():
         api_key=api_key,
         temperature=0.2,
         max_tokens=6000,
+
+        # Important:
+        # Prevent LiteLLM/CrewAI from using prompt caching
+        extra_params={
+            "cache_control": None
+        }
     )
